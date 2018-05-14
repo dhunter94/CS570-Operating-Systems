@@ -1,1 +1,0 @@
-/home/cs/faculty/cs570/Zero/p0.c
