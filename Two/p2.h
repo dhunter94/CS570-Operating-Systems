@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 #include <signal.h>
-#include "/home/cs/faculty/cs570/CHK.h"
+#include "CHK.h"
 #include "getword.h"
 
 
