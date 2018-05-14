@@ -1,0 +1,18 @@
+Daniel Hernandez
+Prof. Carroll
+Program 0
+
+I wrote this code myself with the aid to references to the linux manual.
+I referenced "man 3 getchar" and "man 3 ungetc".
+
+I believe everything works perfectly under all conditions.
+
+----------
+REFERENCES
+----------
+"POSIX Programmer's Manual." Getchar.3p - Linux Manual Page, 26 Nov. 2017, man7.
+	org/linux/man-pages/man3/getchar.3p.html.
+	
+"POSIX Programmer's Manual." Ungetc.3p - Linux Manual Page, 26 Nov. 2017, man7.
+	org/linux/man-pages/man3/ungetc.3p.html.
+

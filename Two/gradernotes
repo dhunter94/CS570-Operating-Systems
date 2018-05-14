@@ -1,0 +1,139 @@
+Daniel Hernandez
+Prof. Carroll
+Program 2
+
+I wrote this program myself, with the aid of other sources. This program
+works under all conditions. 
+
+-----
+NOTES
+-----
+Piping.
+In order to fulfill the requirement of vertical piping I implemented it
+in the following way.
+
+-- pseudocode --
+fork() {
+if child==0 {
+	pipe()
+	for(i < # of pipes) {
+		fork()
+		if grandchildren==0 {
+			if only 1 pipe {
+				redirect STDERR if needed
+				redirect STDOUT to write end of pipe
+				close fd
+				execvp
+			}
+		}
+		else {
+			if not 1 pipe {
+				if not last grand child
+					redirect file STDIN
+				redirect file STDOUT
+				close all fds
+				execvp
+			}
+		}	
+	}
+	redirect STDIN of last command
+	execvp
+}
+wait for last to finish
+
+--end--
+
+In order to fulfill vertical piping, I found this was the only way to do so.
+I initially had all my execution done within the the forking of grandchildren
+of the (grandchildren == 0) condition within the for loop, but it did not create 
+different grandchildren. This was shown with them all having the same PPIDs. 
+This was then remedied by putting them outside of the middle forked command.
+However, I ran into the problem of having a hanging process when there was 
+just 1 fork inquired. This is why I included the 'if only 1 pipe' condition to
+just run its whole processes within the forked command. I understand when you 
+fork that 2 different processes run concurrent with one another, child and parent
+of the forked process, but I had to execvp outside the forked command to get
+vertical piping to work.
+
+---------------------------------------------------------------------------------
+
+Ambigious commands are met with error messages. 
+
+- a.out >< will report a missing redirect operand.
+- echo file >& will report missing operand for redirect and command not
+  found for the & since the redirect is looking for a file name.
+- Pipes with no argument after them report as invalid null command
+- All MV command errors report with specific (ie. 3 arguments, not
+  including flags, will report as too many arguments, -n with a 
+  file that exists will report as that file name followed by doesn't
+  exitst, etc).
+- Mutiple I/O redirects report as ambigious.
+
+----------
+REFERENCES
+----------
+Carroll, John. CS 570 Operating Systems. 2018.
+
+"CS 702 - Operating Systems - Spring 2005." Using dup2 for I/O Redirection 
+	and Pipes, www.cs.loyola.edu/~jglenn/702/S2005/Examples/dup2.html.
+	
+"Linux Programmer's Manual." Chdir(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/chdir.2.html.
+	
+"Linux Programmer's Manual." Dup(2) - Linux Manual Page, 15 Sept. 2017, 
+	man7.org/linux/man-pages/man2/dup.2.html.
+	
+"Linux Programmer's Manual." Exec(3) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man3/exec.3.html.
+	
+"Linux Programmer's Manual." Exit(3) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man3/exit.3.html.
+
+"Linux Programmer's Manual." Fflush(3) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man3/fflush.3.html.
+
+"Linux Programmer's Manual." Fork(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/fork.2.html.
+	
+"Linux Programmer's Manual." Getenv(3) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man3/getenv.3.html.
+
+"Linux Programmer's Manual." Getpgrp(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/getpgrp.2.html.
+
+"Linux Programmer's Manual." Killpg(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/killpg.2.html.
+	
+"Linux Programmer's Manual." Link(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/link.2.html.
+	
+"Linux Programmer's Manual." Open(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/open.2.html.
+
+"Linux Programmer's Manual." Opendir(3) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man3/opendir.3.html.
+	
+"Linux Programmer's Manual." Perror(3) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man3/perror.3.html.
+
+"Linux Programmer's Manual." Printf(3) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man3/printf.3.html
+	
+"Linux Programmer's Manual." Setpgid(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/setpgid.2.html.
+	
+"Linux Programmer's Manual." Signal(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/signal.2.html.
+
+"Linux Programmer's Manual." Unlink(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/unlink.2.html.	
+
+"Linux Programmer's Manual." Wait(2) - Linux Manual Page, 15 Sept. 2017, 
+	http://man7.org/linux/man-pages/man2/wait.2.html.
+	
+"Making Your Own Linux Shell in C." GeeksforGeeks, 26 Sept. 2017, 
+	www.geeksforgeeks.org/making-linux-shell-c/.
+
+"Redirect Perror Output to Fprintf(Stderr, " ")." c - Redirect Perror Output 
+	to Fprintf(Stderr, " ") - Stack Overflow, stackoverflow.com/questions
+	/5483120/redirect-perror-output-to-fprintfstderr.

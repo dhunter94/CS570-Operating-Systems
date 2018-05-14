@@ -1,0 +1,36 @@
+Daniel Hernandez
+Prof. Carroll
+Program 3
+
+I wrote this code myself with the aid of source code from semtex.c example.
+I believe my program works under any condition. 
+
+-----
+Notes
+-----
+The implementation of initStudentStuff() was done in the following way.
+I created one semaphore for mutual exclusive purposes. First, a semaphore
+is initialized with the flags O_CREAT and O_EXCL so that on the first
+instance a robot calls this method, it initializes the semaphore if it doesn't
+exist yet. If not, it fails and assumes it has already been made (ie. non-
+first robots). The initial robot creates the semaphore and the file 
+"countfile" with the same flags to have the same effect. It sets count to 0 
+and writes it to "countfile". I had to use a sem_wait and sem_post within the 
+intialization process, because a robot could potentially try to open a file 
+that doesn't exist yet, which was an issue I ran into. If the robot using
+initStudentStuff() isn't the initial robot, then it opens the semaphore for 
+read/write purposes only.
+
+The placeWidget(int n) method uses a sem_wait and sem_post within the whole
+method, because it is accessing and writing to the same file used by all the
+semaphores. Within this method I determine where to print the robots and
+whether it is the last in the row to print a N or last in the list to print
+a F. When it is the last robot it unlinks and closes the file and semaphore. 
+
+Semaphores functions are only used when there are interactions between the 
+file.
+
+----------
+References
+----------
+Carroll, John. CS 570 Operating Systems. 2018.
